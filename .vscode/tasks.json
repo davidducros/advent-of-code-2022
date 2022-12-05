@@ -24,6 +24,18 @@
 			"options": {
 				"cwd": "${workspaceFolder}/day2"
 			}
-		}
+		},
+		{
+			"type": "cargo",
+			"command": "run",
+			"args": ["--package", "day3"],
+			"problemMatcher": [
+				"$rustc"
+			],
+			"label": "run: day3",
+			"options": {
+				"cwd": "${workspaceFolder}/day3"
+			}
+		},
 	]
 }
