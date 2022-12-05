@@ -36,15 +36,15 @@ fn score(moves: (Move, Move)) -> i32 {
 
 fn input(line: &str) -> (Move, Move) {
     match line {
-        "A X" => return (Move::Rock, Move::Rock),
-        "A Y" => return (Move::Rock, Move::Paper),
-        "A Z" => return (Move::Rock, Move::Scissors),
+        "A X" => return (Move::Rock, Move::Scissors),
+        "A Y" => return (Move::Rock, Move::Rock),
+        "A Z" => return (Move::Rock, Move::Paper),
         "B X" => return (Move::Paper, Move::Rock),
         "B Y" => return (Move::Paper, Move::Paper),
         "B Z" => return (Move::Paper, Move::Scissors),
-        "C X" => return (Move::Scissors, Move::Rock),
-        "C Y" => return (Move::Scissors, Move::Paper),
-        "C Z" => return (Move::Scissors, Move::Scissors),
+        "C X" => return (Move::Scissors, Move::Paper),
+        "C Y" => return (Move::Scissors, Move::Scissors),
+        "C Z" => return (Move::Scissors, Move::Rock),
         _ => panic!("unexpected input")
     }
 }
@@ -66,7 +66,7 @@ fn calculate(file: &str) -> i32 {
 
 #[test]
 fn test_example() {
-    assert_eq!(15, calculate("input/example.txt"));
+    assert_eq!(12, calculate("input/example.txt"));
 }
 
 #[test]
