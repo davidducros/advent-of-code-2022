@@ -1,7 +1,7 @@
 use std::{
     collections::{HashSet, HashMap},
     fs::File,
-    io::{self, BufRead}, string,
+    io::{self, BufRead}
 };
 
 use itertools::Itertools;
@@ -29,13 +29,13 @@ fn score(c: char) -> u32 {
 
     let a = 'a' as u32;
     let z = 'z' as u32;
-    let A = 'A' as u32;
+    let big_a = 'A' as u32;
 
     if v >= a && v <= z {
         return v - a + 1;
     }
 
-    return v - A + 27;
+    return v - big_a + 27;
 }
 
 fn calculate(file: &str) -> u32 {
