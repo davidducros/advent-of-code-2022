@@ -1,6 +1,6 @@
 use std::{
     fs::File,
-    io::{BufRead, BufReader}, fmt::Display,
+    io::{BufRead, BufReader}, fmt::Display, borrow::BorrowMut,
 };
 
 #[derive(PartialEq, Debug)]
@@ -77,14 +77,24 @@ impl Display for Grid {
 }
 
 fn score_impl<'a>(iter: impl Iterator<Item = &'a mut Tree>) {
-    let history: Vec<&&Tree> = vec![];
+    let mut history: Vec<&mut Tree> = vec![];
 
     for tree in iter {
+        let mut calculated = false;
+
         for (score, t) in history.iter().rev().enumerate() {
-            if t.height > tree.height {
-                tree.scenic_scores.push(score as u32);
+            if t.height >= tree.height {
+                tree.scenic_scores.push(score as u32 + 1);
+                calculated = true;
+                break;
             }
         }
+
+        if !calculated {
+            tree.scenic_scores.push(history.len() as u32);
+        }
+
+        history.push(tree);
     }
 }
 
@@ -136,11 +146,35 @@ fn calculate(file: &str) -> u32 {
     grid.count_visible()
 }
 
+fn calculate_part2(file: &str) -> u32 {
+    let mut grid = grid(file);
+
+    grid.update_scenic_scores();
+
+    let mut max: u32 = 0;
+    for row in grid.rows.iter() {
+        for tree in row.iter() {
+            let score = tree.scenic_scores.iter().product();
+            if score > max {
+                max = score;
+            }
+        }
+    }
+
+    max 
+}
+
 fn main() {
     println!("result: {}", calculate("input/problem.txt"));
+    println!("result part 2: {}", calculate_part2("input/problem.txt"));
 }
 
 #[test]
 fn test_example() {
     assert_eq!(21, calculate("input/example.txt"));
+}
+
+#[test]
+fn test_example_part2() {
+    assert_eq!(8, calculate_part2("input/example.txt"));
 }
