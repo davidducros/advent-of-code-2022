@@ -1,12 +1,14 @@
-use std::{fs::File, io::{BufReader, BufRead}};
+use std::{
+    fs::File,
+    io::{BufRead, BufReader},
+};
 
 use itertools::Itertools;
-
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 struct Point {
     x: i32,
-    y: i32
+    y: i32,
 }
 
 impl Point {
@@ -19,25 +21,24 @@ enum Direction {
     Up,
     Down,
     Left,
-    Right
+    Right,
 }
 
 struct Instruction {
     direction: Direction,
-    count: u32
+    count: u32,
 }
 
 fn move_leader(p: &mut Point, d: &Direction) {
     *p = match d {
-        Direction::Up => Point{ x: p.x, y: p.y + 1},
-        Direction::Down => Point{ x: p.x, y: p.y - 1 },
+        Direction::Up => Point { x: p.x, y: p.y + 1 },
+        Direction::Down => Point { x: p.x, y: p.y - 1 },
         Direction::Left => Point { x: p.x - 1, y: p.y },
         Direction::Right => Point { x: p.x + 1, y: p.y },
     };
 }
 
 fn move_follower(follower: &mut Point, leader: &Point) {
-
     let x_diff: i32 = leader.x as i32 - follower.x as i32;
     let y_diff: i32 = leader.y as i32 - follower.y as i32;
 
@@ -58,7 +59,7 @@ fn move_follower(follower: &mut Point, leader: &Point) {
         (-2, 2) => Point::new(follower.x - 1, follower.y + 1),
         (2, -2) => Point::new(follower.x + 1, follower.y - 1),
         (-2, -2) => Point::new(follower.x - 1, follower.y - 1),
-        _ => follower.clone() 
+        _ => follower.clone(),
     };
 
     *follower = replacement;
@@ -69,7 +70,6 @@ fn load_instructions(file: &str) -> Vec<Instruction> {
 
     let file = File::open(file).unwrap();
     for line in BufReader::new(file).lines().map(|l| l.unwrap()) {
-
         let tokens: Vec<&str> = line.split(" ").collect();
 
         let direction = match tokens.get(0).unwrap() {
@@ -77,12 +77,15 @@ fn load_instructions(file: &str) -> Vec<Instruction> {
             &"D" => Direction::Down,
             &"L" => Direction::Left,
             &"R" => Direction::Right,
-            _ => panic!("unsupported instruction")
+            _ => panic!("unsupported instruction"),
         };
-        
+
         let count = tokens.get(1).unwrap().parse::<u32>().unwrap();
 
-        result.push(Instruction { direction: direction, count: count })
+        result.push(Instruction {
+            direction: direction,
+            count: count,
+        })
     }
 
     result
@@ -91,8 +94,8 @@ fn load_instructions(file: &str) -> Vec<Instruction> {
 fn calculate(file: &str) -> u32 {
     let instructions = load_instructions(file);
 
-    let mut head = Point{ x: 0, y: 0 };
-    let mut tail = Point{ x: 0, y: 0 };
+    let mut head = Point { x: 0, y: 0 };
+    let mut tail = Point { x: 0, y: 0 };
 
     let mut tail_history = vec![head.clone()];
 
@@ -127,8 +130,12 @@ fn print_points(points: &Vec<Point>, size: usize) {
             max_y = point.y;
         }
 
-        let c = grid.get_mut(point.y as usize).unwrap().get_mut(point.x as usize).unwrap();
-        
+        let c = grid
+            .get_mut(point.y as usize)
+            .unwrap()
+            .get_mut(point.x as usize)
+            .unwrap();
+
         if *c == '.' {
             *c = char::from_digit(i as u32, 10).unwrap();
         }
@@ -153,7 +160,6 @@ fn calculate_part2(file: &str, print: bool) -> u32 {
     let mut results = vec![points.last().unwrap().clone()];
 
     for i in instructions {
-
         for _ in 0..i.count {
             move_leader(points.first_mut().unwrap(), &i.direction);
 
@@ -161,13 +167,12 @@ fn calculate_part2(file: &str, print: bool) -> u32 {
                 let leader = points.get(i - 1).unwrap().clone();
                 let follower = points.get_mut(i).unwrap();
                 move_follower(follower, &leader);
-
             }
 
             if print {
                 print_points(&points, 6);
             }
-            
+
             results.push(points.last().unwrap().clone());
         }
     }
@@ -177,7 +182,10 @@ fn calculate_part2(file: &str, print: bool) -> u32 {
 
 fn main() {
     println!("result: {}", calculate("input/problem.txt"));
-    println!("result part2: {}", calculate_part2("input/problem.txt", false));
+    println!(
+        "result part2: {}",
+        calculate_part2("input/problem.txt", false)
+    );
 }
 
 #[test]
