@@ -4,7 +4,7 @@ use std::{
     io::{BufRead, BufReader},
 };
 
-use pathfinding::prelude::{astar, bfs};
+use pathfinding::prelude::astar;
 
 #[derive(Debug)]
 enum PointType {
@@ -187,7 +187,7 @@ fn run_astar(grid: &Grid, start: (usize, usize)) -> Option<Vec<(usize, usize)>> 
         |p| grid.distance(*p),
         |p| *p == grid.end,
     )?;
-    
+
     Some(result.0)
 }
 
