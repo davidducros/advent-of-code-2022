@@ -157,5 +157,17 @@
 				"cwd": "${workspaceFolder}/day13"
 			}
 		},
+		{
+			"type": "cargo",
+			"command": "run",
+			"args": ["--package", "day14"],
+			"problemMatcher": [
+				"$rustc"
+			],
+			"label": "run: day14",
+			"options": {
+				"cwd": "${workspaceFolder}/day14"
+			}
+		},
 	]
 }
